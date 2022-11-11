@@ -46,7 +46,7 @@ namespace ViberSender.Controllers
                     {
                         var mess = update.Message as ViberMessage.TextMessage;
 
-                        str = mess.Text;
+                        str = mess?.Text;
 
                         break;
                     }
