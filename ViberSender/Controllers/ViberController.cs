@@ -11,11 +11,13 @@ namespace ViberSender.Controllers
     {
         private readonly IViberBotApi _viberBotApi;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<ViberController> _logger;
 
-        public ViberController(IViberBotApi viberBotApi, IConfiguration configuration)
+        public ViberController(IViberBotApi viberBotApi, IConfiguration configuration, ILogger<ViberController> logger)
         {
             _viberBotApi = viberBotApi;
             _configuration = configuration;
+            _logger = logger;
         }
 
         // The service sets a webhook automatically, but if you want sets him manually then use this
@@ -23,6 +25,8 @@ namespace ViberSender.Controllers
         public async Task<IActionResult> Get()
         {
             var webhookUrl = _configuration.GetSection("ViberBot")["Webhook"];
+            _logger.LogInformation(webhookUrl);
+
             var response = await _viberBotApi.SetWebHookAsync(new ViberWebHook.WebHookRequest(webhookUrl));
 
             if (response.Content?.Status == ViberErrorCode.Ok)
@@ -39,6 +43,7 @@ namespace ViberSender.Controllers
         public async Task<IActionResult> Post([FromBody] ViberCallbackData update)
         {
             var str = String.Empty;
+            _logger.LogInformation(update.ToString());
 
             switch (update.Message.Type)
             {

@@ -1,4 +1,5 @@
 using Viber.Bot.NetCore.Middleware;
+using Serilog;
 
 namespace ViberSender
 {
@@ -7,6 +8,12 @@ namespace ViberSender
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Add logging.
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateBootstrapLogger();
+            builder.Host.UseSerilog();
 
             // Add services to the container.
 
